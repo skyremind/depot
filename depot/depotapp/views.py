@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
+from django.shortcuts import render
 
 # app specific files
 
@@ -71,9 +72,14 @@ def clean_cart(request):
 
 def create_product(request):
     form = ProductForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        form = ProductForm()
+    if request.POST.has_key('create'):
+      if form.is_valid():
+          form.save()
+          form = ProductForm()
+    else:
+        return render(request, "list_product.html")
+
+
 
     t = get_template('depotapp/create_product.html')
     c = RequestContext(request,locals())
