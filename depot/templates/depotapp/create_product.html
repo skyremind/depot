@@ -7,10 +7,15 @@
 <table>
 <form action="" method="POST"> {% csrf_token %}
   {{form}}
-  <tr>
-    <td colspan="2" align="right"><input type="submit" name="create" value="创建"/></td>
-      <td colspan="2" align="right"><input type="submit" name="back" value="返回"/></td>
-  </tr>
+<tr>
+  <td><input type="submit" name="create" value="创建"/></td>
+
+</tr>
+
 </form>
+<tr>
+<td><a href="{% url 'depotapp.views.list_product' %}"><input type="submit" value="返回"></a></td>
+</tr>
+
 </table>
 {% endblock %}

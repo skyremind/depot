@@ -41,3 +41,8 @@ class Cart(object):
                 item.quantity += 1 
                 return
         self.items.append(LineItem(product=product,unit_price=product.price,quantity=1))
+
+class User(models.Model):
+    username = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+    email = models.EmailField()

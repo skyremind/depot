@@ -21,7 +21,7 @@
 	<div class="span2" style="align:right">
 		<p><a class="btn primary" href="{% url 'depotapp.views.view_product' item.id %}">查看</a> </p>
 		<p><a class="btn success" href="{% url 'depotapp.views.edit_product' item.id %}">编辑</a> </p>
-		<p><a class="btn danger" href="#">删除</a></p>
+		<p><a class="btn danger" href="{% url 'depotapp.views.delete_product' item.id %}">删除</a></p>
 	</div>
 </div>
 {% endfor %}
@@ -38,6 +38,7 @@
 {% endif %}
 <p>
 <a href="{% url 'depotapp.views.create_product' %}">新增产品</a>
+<a href="{% url 'depotapp.views.list_lineitem' %}">查看订单</a>
 </p>
 {% endblock %}
 

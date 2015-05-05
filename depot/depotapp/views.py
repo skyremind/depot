@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
-from django.shortcuts import render
+from django.shortcuts import render,render_to_response
 
 # app specific files
 
@@ -72,18 +72,19 @@ def clean_cart(request):
 
 def create_product(request):
     form = ProductForm(request.POST or None)
-    if request.POST.has_key('create'):
-      if form.is_valid():
+
+    if form.is_valid():
           form.save()
           form = ProductForm()
-    else:
-        return render(request, "list_product.html")
-
-
 
     t = get_template('depotapp/create_product.html')
     c = RequestContext(request,locals())
     return HttpResponse(t.render(c))
+def delete_product(request,id):
+    product_instance = Product.objects.get(id = id)
+    product_instance.delete()
+    return list_product(request)
+
 
 
 
@@ -117,18 +118,15 @@ def list_product(request):
     except :
         list_items = paginator.page(paginator.num_pages)
 
-    t = get_template('depotapp/list_product.html')
-    c = RequestContext(request,locals())
-    return HttpResponse(t.render(c))
+    return render_to_response('depotapp/list_product.html',locals())
 
 
 
 def view_product(request, id):
     product_instance = Product.objects.get(id = id)
 
-    t=get_template('depotapp/view_product.html')
-    c=RequestContext(request,locals())
-    return HttpResponse(t.render(c))
+    return render_to_response('depotapp/view_product.html',locals())
+
 
 def edit_product(request, id):
 
@@ -238,7 +236,6 @@ def list_lineitem(request):
     return HttpResponse(t.render(c))
 
 
-
 def view_lineitem(request, id):
     lineitem_instance = LineItem.objects.get(id = id)
 
@@ -258,6 +255,11 @@ def edit_lineitem(request, id):
     t=get_template('depotapp/edit_lineitem.html')
     c=RequestContext(request,locals())
     return HttpResponse(t.render(c))
+def delete_lineitem(request,id):
+    lineitem_instance = LineItem.objects.get(id=id)
+    lineitem_instance.delete()
+    return list_lineitem(request)
+
 
 def atom_of_order(request,id):
     product = Product.objects.get(id = id)
@@ -265,3 +267,22 @@ def atom_of_order(request,id):
     c=RequestContext(request,locals())    
     return HttpResponse(t.render(c), mimetype='application/atom+xml')
 
+def register(request):
+    if request.method == "POST":
+        uf = UserForm(request.POST)
+        if uf.is_valid():
+            #获取表单信息
+            username = uf.cleaned_data['username']
+            passworld = uf.cleaned_data['passworld']
+            email = uf.cleaned_data['email']
+            #将表单写入数据库
+            user = User()
+            user.username = username
+            user.passworld = passworld
+            user.email = email
+            user.save()
+            #返回注册成功页面
+            return render_to_response('depotapp/success.html',{'username':username})
+    else:
+        uf = UserForm()
+    return render_to_response('depotapp/register.html',{'uf':uf})

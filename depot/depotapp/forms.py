@@ -16,6 +16,7 @@ class ProductForm(forms.ModelForm):
 	class Meta:
 		model = Product
 
+
 		# exclude = [] # uncomment this line and specify any field to exclude it from the form
 
 	def __init__(self, *args, **kwargs):
@@ -55,3 +56,8 @@ class LineItemForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super(LineItemForm, self).__init__(*args, **kwargs)
+
+class UserForm(forms.Form):
+    username = forms.CharField(label='用户名：',max_length=100)
+    passworld = forms.CharField(label='密码：',widget=forms.PasswordInput())
+    email = forms.EmailField(label='电子邮件：')
